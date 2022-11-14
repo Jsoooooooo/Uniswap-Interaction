@@ -31,4 +31,3 @@ const walletAddress = process.env.Owner || ''
                 )).to.be.revertedWith('Ownable: caller is not the owner')
         })
     })
-// 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

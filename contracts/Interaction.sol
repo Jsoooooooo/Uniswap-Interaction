@@ -36,7 +36,6 @@ contract Interaction is OwnableUpgradeable {
     MoreThanZero(_amountIn)
     onlyOwner external
     {
-        IERC20(_tokenIn).approve(address(this),_amountIn);
         // transfer money into the contract
         bool success = IERC20(_tokenIn).transferFrom(msg.sender,address(this),_amountIn);
         // if not successful, revert
@@ -61,15 +60,15 @@ contract Interaction is OwnableUpgradeable {
     }
 
     function withdraw(address _token, uint256 amount) external onlyOwner {
-        bool success = IERC20(_token).transfer(msg.sender, amount);
-        if (!success) revert TransferFailed();
+        address payable owner = msg.sender;
+        (bool success, ) = owner.call{value: address(this).balance}("");
+        if(!success) revert TransferFailed();
     }
 
     modifier MoreThanZero(uint256 _amount){
         if (_amount == 0) revert MORE_THAN_ZERO();
         _;
     }
-
 
     function getTradeBalance(address _tokenIn,address _tokenOut)
     public view returns(uint256){
