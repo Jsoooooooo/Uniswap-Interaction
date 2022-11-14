@@ -60,7 +60,7 @@ contract Interaction is OwnableUpgradeable {
     }
 
     function withdraw(address _token, uint256 amount) external onlyOwner {
-        address owner = msg.sender;
+        address payable owner = payable(msg.sender);
         (bool success, ) = owner.call{value: address(this).balance}("");
         if(!success) revert TransferFailed();
     }
